@@ -1,22 +1,33 @@
+using ChatApi.Hubs;
+using ChatApi.Hubs.Interfaces;
+using Scalar.AspNetCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSignalR().AddAzureSignalR(builder.Configuration.GetConnectionString("Azure:SignalR:SchoolChat"));
+builder.Services.AddSingleton<IChatsHub, ChatsHub>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
-app.UseHttpsRedirection();
+app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapHub<ChatsHub>("/api/chat-hub");
+
+app.UseHttpsRedirection();
 
 app.MapControllers();
 
