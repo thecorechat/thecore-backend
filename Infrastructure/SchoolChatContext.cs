@@ -16,8 +16,8 @@ public partial class SchoolChatContext : DbContext
     {
     }
 
+    public virtual DbSet<User> Users { get; set; }
     public virtual DbSet<Chat> Chats { get; set; }
-    public virtual DbSet<Client> Clients { get; set; }
     public virtual DbSet<Message> Messages { get; set; }
 
     private string GetConnectionString(string connectionStringConfigurationKey = "ConnectionStrings:DefaultConnection")
@@ -34,6 +34,38 @@ public partial class SchoolChatContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(u => u.Id).HasName("PK_Users_Id");
+            entity.Property(u => u.Id).ValueGeneratedOnAdd();
+
+            entity.HasIndex(u => u.Identifier).IsUnique();
+            entity.Property(u => u.Identifier).IsRequired().HasDefaultValueSql("(newId())");
+
+            entity.Property(u => u.Username).IsRequired().HasMaxLength(256);
+
+            entity.Property(u => u.IconUrl).IsRequired(false);
+
+
+        });
+
+        modelBuilder.Entity<Role>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_Roles_Id");
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(256);
+
+            entity.Property(e => e.Description).IsRequired(false).HasMaxLength(512);
+        });
+
+        modelBuilder.Entity<Role>().HasData(
+            new Role() { Name = "Admin", Description = "Have permissions for everything" },
+            new Role() { Name = "Teacher", Description = "Can read, write(restricted), delete and change(only materials that owns to him or himsels class)" },
+            new Role() { Name = "Student", Description = "Can read(publicly available or himself class material), write(restricted), delete and change(only material that it owns)" },
+            new Role() { Name = "Guest", Description = "Car read(publicly available or materials attached to him)" }
+        );
+
         modelBuilder.Entity<Chat>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__chats__3214EC07BC974D61");
@@ -41,27 +73,9 @@ public partial class SchoolChatContext : DbContext
 
             entity.ToTable("chats");
 
-            entity.HasMany(e => e.Clients)
-                .WithMany(c => c.Chats)
-                .UsingEntity<Dictionary<string, object>>(
-                    "ChatClient",
-                    j => j.HasOne<Client>().WithMany().OnDelete(DeleteBehavior.Cascade),
-                    j => j.HasOne<Chat>().WithMany().OnDelete(DeleteBehavior.Cascade)
-                );
+            
 
             entity.Property(e => e.Title).HasMaxLength(256);
-        });
-
-        modelBuilder.Entity<Client>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK_Clients_Id");
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-            entity.Property(e => e.Name).HasMaxLength(256);
-
-            entity.HasMany(e => e.Chats)
-                .WithMany(c => c.Clients);
-
         });
 
         modelBuilder.Entity<Message>(entity =>

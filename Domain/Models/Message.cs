@@ -11,9 +11,11 @@ public partial class Message
 
     public string Author { get; set; } = null!;
 
-    public string Text { get; set; } = null!;
+    public string? Text { get; set; } = null!;
+    public List<MessageAttachment?> Files { get; set; } = new List<MessageAttachment?>();
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime? DeletedAt { get; set; }
 
     public virtual Chat Chat { get; set; } = null!;
 }
