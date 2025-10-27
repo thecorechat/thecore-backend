@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 
-namespace Infrastructure;
+namespace Infrastructure.DB;
 
 public partial class SchoolChatContext : DbContext
 {

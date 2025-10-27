@@ -1,4 +1,4 @@
-﻿using Infrastructure;
+﻿using Infrastructure.DB;
 using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure_Tests
