@@ -1,15 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace Domain.Models
+namespace ChatApi.Controllers
 {
-    [PrimaryKey(nameof(Id))]
-    [Index(nameof(Identifier))]
-    [Index(nameof(AzureAdObjectId))]
-    public partial class User
+    public class UserResponseDTO
     {
-        public int Id { get; set; }
-        public string AzureAdObjectId { get; set; } = null!;
         /// <summary>
         /// An <b>@UniqueUserSpecifiedTag</b>
         /// <u><br/> don't add '@' on the beginning</u>

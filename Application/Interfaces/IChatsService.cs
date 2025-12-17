@@ -1,15 +1,11 @@
-﻿
-using Application.Models;
-using Application.ModelsDTO;
+﻿using Application.ModelsDTO;
 
 namespace Application.Interfaces;
 
 public interface IChatsService
 {
-
-
     Task<ChatResponseDTO> CreateChatAsync(ChatCreateDTO dto);
-    Task<IEnumerable<ChatResponseDTO>> GetAvailableChatsAsync();
-    Task<ChatResponseDTO> GetChatAsync(int chatId, int includeMessages = 100);
+    Task<ChatResponseDTO> GetChatAsync(int chatId);
+    Task<ChatResponseDTO> UpdateChatAsync(int chatId, ChatUpdateDTO dto);
     Task<ChatResponseDTO> DeleteChatAsync(int chatId);
 }

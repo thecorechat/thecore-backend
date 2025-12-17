@@ -1,6 +1,4 @@
-﻿using Domain.Models;
-
-namespace Application.ModelsDTO
+﻿namespace Application.ModelsDTO
 {
     public class MessageCreateDTO
     {

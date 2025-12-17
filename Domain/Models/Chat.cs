@@ -14,7 +14,7 @@ public partial class Chat
     /// <summary>
     /// Users of this chat\group
     /// </summary>
-    public virtual ICollection<User> Users{ get; set; } = new List<User>();
+    public virtual ICollection<User> Users { get; set; } = new List<User>();
     /// <summary>
     /// Messages of this chat\group
     /// </summary>

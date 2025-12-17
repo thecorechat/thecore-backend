@@ -10,4 +10,5 @@ public class ChatResponseDTO
     public string Title { get; set; } = null!;
 
     public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
+    public virtual ICollection<ChatUserPermission> UsersPermissions { get; set; } = new List<ChatUserPermission>();
 }

@@ -1,5 +1,4 @@
 ﻿using Application.ModelsDTO;
-using Domain.Models;
 using Domain.Records;
 
 namespace Application.Interfaces
@@ -17,7 +16,7 @@ namespace Application.Interfaces
         /// <param name="limit">max count of elements in keyset(default 20)</param>
         /// <param name="reverse">reverse the collection? (default <see cref="false"/>/></param>
         /// <returns></returns>
-        Task<KeysetPaginationAfterResult<MessageResponseDTO>> GetMessagesKeysetPaginationAsync(int chatId, string? after, string? propName = nameof(Message.CreatedAt), int? limit = 20, bool? reverse = false);
+        Task<KeysetPaginationAfterResult<MessageResponseDTO>> GetMessagesKeysetPaginationAsync(int chatId, string? after = null, string? propName = null, int? limit = null, bool? reverse = null);
 
         /// <summary>
         /// Updating existing message by id

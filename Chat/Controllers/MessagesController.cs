@@ -2,7 +2,6 @@
 using Application.ModelsDTO;
 using ChatApi.Hubs.Interfaces;
 using Domain.Records;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChatApi.Controllers
@@ -23,7 +22,7 @@ namespace ChatApi.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(MessageResponseDTO), StatusCodes.Status200OK)]
-        public async Task<ActionResult<MessageResponseDTO>> CreateMessage(
+        public async Task<IResult> CreateMessage(
             [FromBody] MessageCreateDTO dto)
         {
             MessageResponseDTO result;
@@ -33,10 +32,10 @@ namespace ChatApi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return Results.BadRequest(ex.Message);
             }
             await ChatsHub.SendMessageAsync(result);
-            return Ok(result);
+            return Results.Created();
         }
 
         [HttpGet("{chatId:int}")]
@@ -61,8 +60,8 @@ namespace ChatApi.Controllers
         }
 
         [HttpDelete("{messageId:int}")]
-        [ProducesResponseType(typeof(MessageResponseDTO), StatusCodes.Status200OK)]
-        public async Task<ActionResult<MessageResponseDTO>> DeleteMessage(int messageId)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IResult> DeleteMessage(int messageId)
         {
             MessageResponseDTO result;
             try
@@ -71,15 +70,15 @@ namespace ChatApi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return Results.BadRequest(ex.Message);
             }
             await ChatsHub.DeleteMessageAsync(result);
-            return Ok(result);
+            return Results.NoContent();
         }
 
         [HttpPut("{messageId:int}")]
-        [ProducesResponseType(typeof(MessageResponseDTO), StatusCodes.Status200OK)]
-        public async Task<ActionResult<MessageResponseDTO>> UpdateMessage(
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IResult> UpdateMessage(
             int messageId,
             [FromBody] MessageUpdateDTO dto)
         {
@@ -90,10 +89,10 @@ namespace ChatApi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return Results.BadRequest(ex.Message);
             }
             await ChatsHub.UpdateMessageAsync(result);
-            return Ok(result);
+            return Results.NoContent();
         }
 
 

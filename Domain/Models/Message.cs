@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Domain.Models;
+﻿namespace Domain.Models;
 
 public partial class Message
 {
@@ -12,6 +9,7 @@ public partial class Message
     public string Author { get; set; } = null!;
 
     public string? Text { get; set; } = null!;
+    // ToDo 
     public List<MessageAttachment?> Files { get; set; } = new List<MessageAttachment?>();
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;

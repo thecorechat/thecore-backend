@@ -61,9 +61,9 @@ public partial class SchoolChatContext : DbContext
 
         modelBuilder.Entity<Role>().HasData(
             new Role() { Name = "Admin", Description = "Have permissions for everything" },
-            new Role() { Name = "Teacher", Description = "Can read, write(restricted), delete and change(only materials that owns to him or himsels class)" },
+            new Role() { Name = "Teacher", Description = "Can read, write(restricted), delete and change(only materials that owns to him or himself class)" },
             new Role() { Name = "Student", Description = "Can read(publicly available or himself class material), write(restricted), delete and change(only material that it owns)" },
-            new Role() { Name = "Guest", Description = "Car read(publicly available or materials attached to him)" }
+            new Role() { Name = "Guest", Description = "Can read(publicly available or materials attached to him)" }
         );
 
         modelBuilder.Entity<Chat>(entity =>
@@ -73,7 +73,7 @@ public partial class SchoolChatContext : DbContext
 
             entity.ToTable("chats");
 
-            
+
 
             entity.Property(e => e.Title).HasMaxLength(256);
         });

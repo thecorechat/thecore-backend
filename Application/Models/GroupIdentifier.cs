@@ -12,7 +12,7 @@ namespace Application.Models
 
         public GroupIdentifier(string title, int id)
         {
-            ChatTitle = title; 
+            ChatTitle = title;
             ChatId = id;
         }
 

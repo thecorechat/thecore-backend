@@ -1,6 +1,4 @@
-﻿using Domain.Models;
-
-namespace Application.ModelsDTO;
+﻿namespace Application.ModelsDTO;
 
 public class MessageResponseDTO
 {
@@ -14,5 +12,5 @@ public class MessageResponseDTO
 
     public DateTime CreatedAt { get; set; }
 
-    
+
 }

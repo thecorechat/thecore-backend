@@ -1,9 +1,7 @@
-﻿using ChatApi.Hubs.Interfaces;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Application.ModelsDTO;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Domain.Records;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq.Expressions;
 
 namespace ChatApi.Controllers
 {
@@ -12,37 +10,38 @@ namespace ChatApi.Controllers
     public class ChatsController : ControllerBase
     {
         private IChatsService ChatsService { get; init; }
+        private IChatAccessService ChatAccessService { get; init; }
 
-        public ChatsController(IChatsService chatsService)
+        public ChatsController(IChatsService chatsService, IChatAccessService chatAccessService)
         {
             ChatsService = chatsService;
+            ChatAccessService = chatAccessService;
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(ChatResponseDTO), StatusCodes.Status200OK)]
-        public async Task<ActionResult<ChatResponseDTO>> CreateChat(
-            [FromBody]ChatCreateDTO dto)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public async Task<IResult> CreateChat(
+            [FromBody] ChatCreateDTO dto)
         {
-            ChatResponseDTO result;
             try
             {
-                result = await ChatsService.CreateChatAsync(dto);
+                await ChatsService.CreateChatAsync(dto);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return Results.BadRequest(ex.Message);
             }
-            return Ok(result);
+            return Results.Created();
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<ChatResponseDTO>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<ChatResponseDTO>>> GetAvailableChatsAsync()
+        [ProducesResponseType(typeof(KeysetPaginationAfterResult<ChatResponseDTO>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<KeysetPaginationAfterResult<ChatResponseDTO>>> GetAvailableChatsAsync()
         {
-            IEnumerable<ChatResponseDTO> result;
+            KeysetPaginationAfterResult<ChatResponseDTO> result;
             try
             {
-                result = await ChatsService.GetAvailableChatsAsync();
+                result = await ChatAccessService.GetAvailableChatsAsync();
             }
             catch (Exception ex)
             {
@@ -69,19 +68,18 @@ namespace ChatApi.Controllers
         }
 
         [HttpDelete("{chatId:int}")]
-        [ProducesResponseType(typeof(ChatResponseDTO), StatusCodes.Status200OK)]
-        public async Task<ActionResult<ChatResponseDTO>> DeleteChat(int chatId)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IResult> DeleteChat(int chatId)
         {
-            ChatResponseDTO result;
             try
             {
-                result = await ChatsService.DeleteChatAsync(chatId);
+                await ChatsService.DeleteChatAsync(chatId);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return Results.BadRequest(ex.Message);
             }
-            return Ok(result);
+            return Results.NoContent();
         }
     }
 }

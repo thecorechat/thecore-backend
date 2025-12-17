@@ -2,7 +2,6 @@
 using Application.Models;
 using Application.ModelsDTO;
 using ChatApi.Hubs.Interfaces;
-using Domain.Models;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 
@@ -11,16 +10,16 @@ namespace ChatApi.Hubs;
 public class ChatsHub : Hub, IChatsHub
 {
 
-    public IChatsManager ChatsManager{ get; init; }
+    private IChatAccessService СhatAccessService { get; init; }
 
-    public ChatsHub (IChatsManager chatsManager)
+    public ChatsHub(IChatAccessService chatAccessService)
     {
-        ChatsManager = chatsManager;
+        СhatAccessService = chatAccessService;
     }
 
     public override async Task OnConnectedAsync()
     {
-        if(Context.ConnectionId is null)
+        if (Context.ConnectionId is null)
         {
             new Exception("Context is null");
         }
@@ -30,9 +29,9 @@ public class ChatsHub : Hub, IChatsHub
             new Exception("User id is null or incorrect");
         }
 
-        HashSet<GroupIdentifier> groupsIdentifiersContainsTheUser =
-            [.. (await ChatsManager.ChatsContainsTheUser(userId)).Select(g => new GroupIdentifier(g.Title, g.Id))];
-        foreach (var groupIdentifier in groupsIdentifiersContainsTheUser)
+        HashSet<GroupIdentifier> groupsContainsTheUserIdentifiers =
+            [.. (await СhatAccessService.ChatsContainsTheUser(userId)).Select(g => new GroupIdentifier(g.Title, g.Id))];
+        foreach (var groupIdentifier in groupsContainsTheUserIdentifiers)
         {
             await Groups.AddToGroupAsync(Context!.ConnectionId!, groupIdentifier.ToString());
         }
@@ -40,28 +39,56 @@ public class ChatsHub : Hub, IChatsHub
         await base.OnConnectedAsync();
     }
 
-    public override Task OnDisconnectedAsync(Exception? exception)
+    public override async Task OnDisconnectedAsync(Exception? exception)
     {
+        if (int.TryParse(Context?.User?.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value, out int userId) == false)
+        {
+            new Exception("User id is null or incorrect");
+        }
+        HashSet<GroupIdentifier> groupsContainsTheUserIdentifiers =
+            [.. (await СhatAccessService.ChatsContainsTheUser(userId)).Select(g => new GroupIdentifier(g.Title, g.Id))];
 
+        foreach (var groupIdentifier in groupsContainsTheUserIdentifiers)
+        {
+            await Groups.RemoveFromGroupAsync(Context?.ConnectionId ?? throw new Exception(), groupIdentifier.ToString());
+        }
 
-        return base.OnDisconnectedAsync(exception);
+        await base.OnDisconnectedAsync(exception);
     }
 
-    public async Task UpdateMessageAsync(MessageResponseDTO message) 
+    /// <summary>
+    /// Receiving <see cref="MessageResponseDTO"/> there and send it back for notify about update a message
+    /// <b><br/> Convinient call before the response in the controllers</b>
+    /// </summary>
+    /// <param name="message"></param>
+    /// <returns></returns>
+    public async Task UpdateMessageAsync(MessageResponseDTO message)
     {
-        GroupIdentifier groupIdentifier = await ChatsManager.GetGroupIdentifierByGroupIdAsync(message.ChatId);
-        await Clients.Group(groupIdentifier.ToString()).SendAsync("UpdateMessage", message);
+        GroupIdentifier groupIdentifier = await СhatAccessService.GetGroupIdentifierByGroupIdAsync(message.ChatId);
+        await Clients.Group(groupIdentifier.ToString()).SendAsync("updateMessage", message);
     }
 
+    /// <summary>
+    /// Receiving <see cref="MessageResponseDTO"/> there and send it back for notify about creating a new message
+    /// <b><br/> Convinient call before the response in the controllers</b>    
+    /// </summary>
+    /// <param name="message"></param>
+    /// <returns></returns>
     public async Task SendMessageAsync(MessageResponseDTO message)
     {
-        GroupIdentifier groupIdentifier = await ChatsManager.GetGroupIdentifierByGroupIdAsync(message.ChatId);
-        await Clients.Group(groupIdentifier.ToString()).SendAsync("ReceiveMessage", message);
+        GroupIdentifier groupIdentifier = await СhatAccessService.GetGroupIdentifierByGroupIdAsync(message.ChatId);
+        await Clients.Group(groupIdentifier.ToString()).SendAsync("receiveMessage", message);
     }
 
+    /// <summary>
+    /// Receiving <see cref="MessageResponseDTO"/> there and send it back for notify about deleting a message
+    /// <b><br/> Convinient call before the response in the controllers</b>
+    /// </summary>
+    /// <param name="message"></param>
+    /// <returns></returns>
     public async Task DeleteMessageAsync(MessageResponseDTO message)
     {
-        GroupIdentifier groupIdentifier = await ChatsManager.GetGroupIdentifierByGroupIdAsync(message.ChatId);
-        await Clients.Group(groupIdentifier.ToString()).SendAsync("DeleteMessage", message);
+        GroupIdentifier groupIdentifier = await СhatAccessService.GetGroupIdentifierByGroupIdAsync(message.ChatId);
+        await Clients.Group(groupIdentifier.ToString()).SendAsync("deleteMessage", message);
     }
 }
