@@ -6,7 +6,7 @@ namespace Domain.Models
     [PrimaryKey(nameof(Id))]
     [Index(nameof(Identifier))]
     [Index(nameof(AzureAdObjectId))]
-    public partial class User
+    public class User
     {
         public int Id { get; set; }
         public string AzureAdObjectId { get; set; } = null!;

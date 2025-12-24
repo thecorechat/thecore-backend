@@ -1,6 +1,6 @@
 ﻿namespace Domain.Models;
 
-public partial class Message
+public class Message
 {
     public int Id { get; set; }
 
@@ -10,7 +10,7 @@ public partial class Message
 
     public string? Text { get; set; } = null!;
     // ToDo 
-    public List<MessageAttachment?> Files { get; set; } = new List<MessageAttachment?>();
+    public List<MessageAttachment> Attachments { get; set; } = new List<MessageAttachment>();
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime? DeletedAt { get; set; }

@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
-    internal class ChatsRepository : IChatsCRUDRepository
+    internal class ChatsCRUDRepository : IChatsCRUDRepository
     {
         private SchoolChatContext ChatContext { get; init; }
 
-        public ChatsRepository(SchoolChatContext schoolChatContext)
+        public ChatsCRUDRepository(SchoolChatContext schoolChatContext)
         {
             ChatContext = schoolChatContext;
         }

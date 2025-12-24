@@ -19,6 +19,13 @@ public partial class SchoolChatContext : DbContext
     public virtual DbSet<User> Users { get; set; }
     public virtual DbSet<Chat> Chats { get; set; }
     public virtual DbSet<Message> Messages { get; set; }
+    public virtual DbSet<MessageAttachment> MessageAttachments { get; set; }
+    public virtual DbSet<ChatUserPermission> ChatUserPermissions { get; set; }
+
+    public virtual DbSet<Role> Roles { get; set; }
+    public virtual DbSet<Permission> Permissions{ get; set; }
+
+
 
     private string GetConnectionString(string connectionStringConfigurationKey = "ConnectionStrings:DefaultConnection")
     {
@@ -30,7 +37,13 @@ public partial class SchoolChatContext : DbContext
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer(GetConnectionString());
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseSqlServer(GetConnectionString());
+        }
+    }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -60,10 +73,10 @@ public partial class SchoolChatContext : DbContext
         });
 
         modelBuilder.Entity<Role>().HasData(
-            new Role() { Name = "Admin", Description = "Have permissions for everything" },
-            new Role() { Name = "Teacher", Description = "Can read, write(restricted), delete and change(only materials that owns to him or himself class)" },
-            new Role() { Name = "Student", Description = "Can read(publicly available or himself class material), write(restricted), delete and change(only material that it owns)" },
-            new Role() { Name = "Guest", Description = "Can read(publicly available or materials attached to him)" }
+            new Role() { Id = 1, Name = "Admin", Description = "Have permissions for everything" },
+            new Role() { Id = 2, Name = "Teacher", Description = "Can read, write(restricted), delete and change(only materials that owns to him or himself class)" },
+            new Role() { Id = 3, Name = "Student", Description = "Can read(publicly available or himself class material), write(restricted), delete and change(only material that it owns)" },
+            new Role() { Id = 4, Name = "Guest", Description = "Can read(publicly available or materials attached to him)" }
         );
 
         modelBuilder.Entity<Chat>(entity =>
@@ -97,6 +110,60 @@ public partial class SchoolChatContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Messages_Char_Id_Id");
         });
+
+        modelBuilder.Entity<MessageAttachment>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_MessageAttachments_Id");
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+            entity.Property(e => e.FileName).IsRequired().HasMaxLength(512);
+            entity.Property(e => e.ContentType).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Data).IsRequired();
+
+            entity.HasOne(d => d.Message)
+                .WithMany(p => p.Attachments)
+                .HasForeignKey(d => d.MessageId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_MessageAttachments_MessageId");
+        });
+
+        modelBuilder.Entity<Permission>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_Permissions_Id");
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(128);
+            entity.Property(e => e.Description).HasMaxLength(512);
+        });
+
+        modelBuilder.Entity<ChatUserPermission>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_ChatUserPermissions_Id");
+            entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+
+            entity.HasOne(d => d.Chat)
+                .WithMany()
+                .HasForeignKey(d => d.ChatId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(d => d.User)
+                .WithMany()
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(d => d.Permission)
+                .WithMany()
+                .HasForeignKey(e => e.PermissionId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<Permission>().HasData(
+            new Permission { Id = 1, Name = "ReadMessages", Description = "Allows you to view messages in the chat" },
+            new Permission { Id = 2, Name = "SendMessages", Description = "Allows sending new messages" },
+            new Permission { Id = 3, Name = "SendAttachments", Description = "Allows you to attach files to messages" },
+            new Permission { Id = 4, Name = "DeleteOwnMessages", Description = "Allows you to delete your own messages" },
+            new Permission { Id = 5, Name = "ManageUsers", Description = "Chat administrator: adding/removing participants" },
+            new Permission { Id = 6, Name = "EditChatInfo", Description = "Allows you to change the name and icon of the chat" }
+        );
 
         OnModelCreatingPartial(modelBuilder);
     }

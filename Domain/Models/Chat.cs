@@ -1,7 +1,7 @@
 ﻿
 namespace Domain.Models;
 
-public partial class Chat
+public class Chat
 {
     public int Id { get; set; }
 

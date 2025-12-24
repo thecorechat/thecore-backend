@@ -6,11 +6,11 @@ using Mapster;
 
 namespace Application.Services
 {
-    public class ChatsManager : IChatsService
+    public class ChatsService : IChatsService
     {
         private IChatsCRUDRepository CRUDRepository { get; init; }
 
-        public ChatsManager(IChatsCRUDRepository chatsRepository)
+        public ChatsService(IChatsCRUDRepository chatsRepository)
         {
             CRUDRepository = chatsRepository;
         }

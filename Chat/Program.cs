@@ -40,7 +40,7 @@ builder.Services.AddPagination();
 builder.Services.AddSignalR().AddAzureSignalR(builder.Configuration["SignalR-SchoolChat-PrimaryConnectionString"]);//azure key vault
 builder.Services.AddSingleton<IChatsHub, ChatsHub>();
 
-builder.Services.AddTransient<IChatsService, ChatsManager>();
+builder.Services.AddTransient<IChatsService, ChatsService>();
 builder.Services.AddTransient<IChatAccessService, ChatAccessService>();
 
 
