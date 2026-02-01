@@ -23,7 +23,7 @@ public partial class SchoolChatContext : DbContext
     public virtual DbSet<ChatUserPermission> ChatUserPermissions { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
-    public virtual DbSet<Permission> Permissions{ get; set; }
+    public virtual DbSet<Permission> Permissions { get; set; }
 
 
 

@@ -1,6 +1,5 @@
-﻿
-using Application.Interfaces;
-using Application.ModelsDTO;
+﻿using Application.ModelsDTO;
+using Application.Services.Interfaces;
 using Domain.Interfaces;
 using Domain.Models;
 using Domain.Records;
@@ -31,15 +30,14 @@ namespace Application.Services
                 .Adapt<MessageResponseDTO>();
         }
 
-        public async Task<KeysetPaginationAfterResult<MessageResponseDTO>> GetMessagesKeysetPaginationAsync(int chatId, string? after = null, string? propName = null, int? limit = null, bool? reverse = null)
+        public async Task<KeysetPaginationAfterResult<MessageResponseDTO>> GetMessagesKeysetPaginationAsync(string? after = null, string? propName = null, int? limit = null, bool? reverse = null)
         {
             string sortByProp = propName ?? nameof(Message.CreatedAt);
             limit = limit > 1000 ? 1000 : 100;
             reverse ??= false;
-            PropertyInfo? propInf = typeof(Message).GetProperties().FirstOrDefault(p => p.Name == propName)
-                ?? throw new ArgumentException($"Property '{propName}' does not exist on Message.");
+            propName ??= nameof(Message.CreatedAt);
 
-            var result = await MessagesRepository.GetMessagesKeysetPaginationAsync(chatId, after, propInf, (int)limit, (bool)reverse);
+            var result = await MessagesRepository.GetMessagesKeysetPaginationAsync(after, propName, (int)limit, (bool)reverse);
             return result.Adapt<KeysetPaginationAfterResult<MessageResponseDTO>>();
         }
 

@@ -1,5 +1,5 @@
-﻿using Application.Interfaces;
-using Application.ModelsDTO;
+﻿using Application.ModelsDTO;
+using Application.Services.Interfaces;
 using Domain.Records;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,9 +10,9 @@ namespace ChatApi.Controllers
     public class ChatsController : ControllerBase
     {
         private IChatsService ChatsService { get; init; }
-        private IChatAccessService ChatAccessService { get; init; }
+        private IChatsAccessService ChatAccessService { get; init; }
 
-        public ChatsController(IChatsService chatsService, IChatAccessService chatAccessService)
+        public ChatsController(IChatsService chatsService, IChatsAccessService chatAccessService)
         {
             ChatsService = chatsService;
             ChatAccessService = chatAccessService;

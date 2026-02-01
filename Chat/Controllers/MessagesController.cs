@@ -1,5 +1,5 @@
-﻿using Application.Interfaces;
-using Application.ModelsDTO;
+﻿using Application.ModelsDTO;
+using Application.Services.Interfaces;
 using ChatApi.Hubs.Interfaces;
 using Domain.Records;
 using Microsoft.AspNetCore.Mvc;
@@ -41,7 +41,6 @@ namespace ChatApi.Controllers
         [HttpGet("{chatId:int}")]
         [ProducesResponseType(typeof(KeysetPaginationAfterResult<MessageResponseDTO>), StatusCodes.Status200OK)]
         public async Task<ActionResult<KeysetPaginationAfterResult<MessageResponseDTO>>> GetMessages(
-            [FromQuery] int chatId,
             [FromQuery] string? after,
             [FromQuery] string? propName,
             [FromQuery] int? limit,
@@ -50,7 +49,7 @@ namespace ChatApi.Controllers
             KeysetPaginationAfterResult<MessageResponseDTO> result;
             try
             {
-                result = await MessagesService.GetMessagesKeysetPaginationAsync(chatId, after, propName, limit, reverse);
+                result = await MessagesService.GetMessagesKeysetPaginationAsync(after, propName, limit, reverse);
             }
             catch (Exception ex)
             {

@@ -1,6 +1,6 @@
 ﻿using Application.ModelsDTO;
 
-namespace Application.Interfaces;
+namespace Application.Services.Interfaces;
 
 public interface IChatsService
 {

@@ -1,7 +1,9 @@
 ﻿
+using Domain.Models.Contracts;
+
 namespace Domain.Models;
 
-public class Chat
+public class Chat : IIdentifiable
 {
     public int Id { get; set; }
 

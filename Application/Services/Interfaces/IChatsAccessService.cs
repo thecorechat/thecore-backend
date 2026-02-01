@@ -1,14 +1,13 @@
-﻿
-using Application.Models;
+﻿using Application.Models;
 using Application.ModelsDTO;
 using Domain.Records;
 
-namespace Application.Interfaces
+namespace Application.Services.Interfaces
 {
-    public interface IChatAccessService
+    public interface IChatsAccessService
     {
         Task<KeysetPaginationAfterResult<ChatResponseDTO>> GetAvailableChatsAsync(string? after = null, string? propName = null, int? limit = null, bool? reverse = null);
-        Task<IEnumerable<ChatResponseDTO>> ChatsContainsTheUser(int userId);
+        Task<IEnumerable<ChatResponseDTO>> ChatsContainsTheUserAsync(int userId);
         Task<GroupIdentifier> GetGroupIdentifierByGroupIdAsync(int chatId);
     }
 }

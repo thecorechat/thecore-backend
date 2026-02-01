@@ -1,8 +1,9 @@
-using Application.Interfaces;
+using Application.DI;
 using Application.Services;
 using Azure.Identity;
 using ChatApi.Hubs;
 using ChatApi.Hubs.Interfaces;
+using Infrastructure.DI;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -29,6 +30,7 @@ builder.Services.AddControllers(conf =>
     var policy = new AuthorizationPolicyBuilder()
         .RequireAuthenticatedUser()
         .Build();
+
     conf.Filters.Add(new AuthorizeFilter(policy));
 });
 builder.Services.AddOpenApi();
@@ -38,12 +40,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddPagination();
 
 builder.Services.AddSignalR().AddAzureSignalR(builder.Configuration["SignalR-SchoolChat-PrimaryConnectionString"]);//azure key vault
+
+//Presentation Layer Dependencies
 builder.Services.AddSingleton<IChatsHub, ChatsHub>();
 
-builder.Services.AddTransient<IChatsService, ChatsService>();
-builder.Services.AddTransient<IChatAccessService, ChatAccessService>();
+//Application Layer Dependencies
+builder.Services.AddApplicationServices();
 
-
+//Infrastructure Layer Dependencies
+builder.Services.AddDBDependencies();
 
 var app = builder.Build();
 

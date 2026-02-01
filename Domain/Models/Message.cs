@@ -1,6 +1,8 @@
-﻿namespace Domain.Models;
+﻿using Domain.Models.Contracts;
 
-public class Message
+namespace Domain.Models;
+
+public class Message : IIdentifiable
 {
     public int Id { get; set; }
 

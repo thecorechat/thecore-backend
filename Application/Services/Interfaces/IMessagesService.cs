@@ -1,7 +1,7 @@
 ﻿using Application.ModelsDTO;
 using Domain.Records;
 
-namespace Application.Interfaces
+namespace Application.Services.Interfaces
 {
     public interface IMessagesService
     {
@@ -10,13 +10,12 @@ namespace Application.Interfaces
         /// <summary>
         /// Getting <see cref="KeysetPaginationAfterResult{T}"/> (cursor pagination) of the chat (by <paramref name="chatId"/>)
         /// </summary>
-        /// <param name="chatId">specifies chat from where will be recieved a pagination</param>
         /// <param name="after">After row</param>
         /// <param name="propName">Sort by prop name(default by time)</param>
         /// <param name="limit">max count of elements in keyset(default 20)</param>
         /// <param name="reverse">reverse the collection? (default <see cref="false"/>/></param>
         /// <returns></returns>
-        Task<KeysetPaginationAfterResult<MessageResponseDTO>> GetMessagesKeysetPaginationAsync(int chatId, string? after = null, string? propName = null, int? limit = null, bool? reverse = null);
+        Task<KeysetPaginationAfterResult<MessageResponseDTO>> GetMessagesKeysetPaginationAsync(string? after = null, string? propName = null, int? limit = null, bool? reverse = null);
 
         /// <summary>
         /// Updating existing message by id

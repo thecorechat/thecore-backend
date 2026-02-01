@@ -9,7 +9,7 @@ namespace Domain.Interfaces
 
         Task<Message> CreateMessageAsync(Message message);
         Task<Message?> GetMessageByIdAsync(int messageId);
-        Task<KeysetPaginationAfterResult<Message>> GetMessagesKeysetPaginationAsync(int chatId, string? after, PropertyInfo propName, int limit, bool reverse);
+        Task<KeysetPaginationAfterResult<Message>> GetMessagesKeysetPaginationAsync(string? after, string propName, int limit, bool IsDescending);
         Task<Message> UpdateMessageAsync(int messageId, Message message);
         Task<Message> DeleteMessageAsync(int messageId);
 

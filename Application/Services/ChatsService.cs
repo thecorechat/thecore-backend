@@ -1,5 +1,5 @@
-﻿using Application.Interfaces;
-using Application.ModelsDTO;
+﻿using Application.ModelsDTO;
+using Application.Services.Interfaces;
 using Domain.Interfaces;
 using Domain.Models;
 using Mapster;
