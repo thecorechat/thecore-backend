@@ -364,3 +364,6 @@ FodyWeavers.xsd
 
 # Local configs
 /Chat/Properties/serviceDependencies.local.json
+/.env
+/Chat/Properties/ServiceDependencies/local/signalr1.arm.json
+/Chat/Properties/ServiceDependencies/local/secrets1.arm.json

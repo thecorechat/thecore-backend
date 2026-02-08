@@ -1,11 +1,6 @@
 ﻿using Application.Orchestrations.Interfaces;
 using Application.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Orchestrations
 {
@@ -13,8 +8,8 @@ namespace Application.Orchestrations
     {
         private readonly IServiceScopeFactory serviceScopeFactory;
 
-        public ChatsAccessOrchestrator(IServiceScopeFactory serviceScopeFactory) 
-        { 
+        public ChatsAccessOrchestrator(IServiceScopeFactory serviceScopeFactory)
+        {
             this.serviceScopeFactory = serviceScopeFactory;
         }
 

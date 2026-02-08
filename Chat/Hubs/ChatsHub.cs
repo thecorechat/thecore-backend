@@ -1,10 +1,8 @@
 ﻿using Application.Models;
 using Application.ModelsDTO;
 using Application.Orchestrations.Interfaces;
-using Application.Services.Interfaces;
 using ChatApi.Hubs.Interfaces;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace ChatApi.Hubs;

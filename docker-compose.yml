@@ -1,0 +1,22 @@
+services:
+  chatapi:
+    image: ${DOCKER_REGISTRY-}chatapi
+    build:
+      context: .
+      dockerfile: Chat/Dockerfile
+    environment:
+      #ASPNETCORE_HOSTINGSTARTUPASSEMBLIES: "Microsoft.Azure.SignalR"
+
+      ASPNETCORE_HTTP_PORT: ${ASPNETCORE_HTTP_PORT}
+      ASPNETCORE_HTTPS_PORT: ${ASPNETCORE_HTTPS_PORT}
+      SchoolChatSecretsUri: ${SchoolChatSecretsUri}
+
+      AZURE_TENANT_ID: ${AZURE_TENANT_ID}
+      AZURE_CLIENT_ID: ${AZURE_CLIENT_ID}
+      AZURE_CLIENT_SECRET: ${AZURE_CLIENT_SECRET}
+    ports:
+      - 8080:${ASPNETCORE_HTTP_PORT}
+      - 8081:${ASPNETCORE_HTTPS_PORT}
+    env_file:
+      - .env
+    container_name: chatapi

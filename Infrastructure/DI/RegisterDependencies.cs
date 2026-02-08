@@ -14,7 +14,7 @@ namespace Infrastructure.DI
 
             services.AddScoped<IChatsCRUDRepository, ChatsCRUDRepository>();
             services.AddScoped<IChatsQueryRepository, ChatsQueryRepository>();
-            //services.AddScoped<IMessagesRepository, MessagesRepository>();
+            services.AddScoped<IMessagesRepository, MessagesRepository>();
         }
     }
 }

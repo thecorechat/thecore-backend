@@ -77,7 +77,7 @@ namespace Infrastructure
             {
                 var ascendingMethod = ExtractKeysetPaginationBuilderMethod("Ascending", keyType);
 
-                var ascendingMethodTieBreaker = ExtractKeysetPaginationBuilderMethod("Ascending" ,tieBreakerType);
+                var ascendingMethodTieBreaker = ExtractKeysetPaginationBuilderMethod("Ascending", tieBreakerType);
 
                 return builder =>
                 {

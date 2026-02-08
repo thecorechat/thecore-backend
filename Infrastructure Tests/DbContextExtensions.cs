@@ -1,9 +1,5 @@
 ﻿using Domain.Models;
-using Infrastructure.DB;
 using Infrastructure_Tests;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Infrastructure.DB
 {

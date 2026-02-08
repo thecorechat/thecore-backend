@@ -6,7 +6,6 @@ using Infrastructure.DB;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
 using MR.AspNetCore.Pagination;
 
 namespace Infrastructure_Tests.Repositories
